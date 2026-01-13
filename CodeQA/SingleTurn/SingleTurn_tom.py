@@ -19,7 +19,7 @@ STUDENT_JUDGE_MODEL = "Qwen/Qwen2.5-Coder-7B-Instruct"
 
 TEACHER_MODEL = "Qwen/Qwen3-Coder-30B-A3B-Instruct"
 
-# Teacher intervention rate (30%)
+# Teacher intervention rate (30% of examples)
 TEACHER_INTERVENTION_RATE = 0.30
 
 # Reproducibility
@@ -184,7 +184,7 @@ Prediction:
 # Teacher intervention prompt (from notebook pattern)
 # -----------------------------
 TEACHER_SYSTEM_PROMPT = """
-You are a 30B teacher LLM model reviewing a student LLM-as-judge's evaluation of a Teaching Assistant's (TA) answer.
+You are a 70B teacher LLM model reviewing a student LLM-as-judge's evaluation of a Teaching Assistant's (TA) answer.
 
 You will receive:
 - Python code snippet
@@ -197,17 +197,38 @@ Your task:
 - Examine the TA's predicted answer in context of the code, question, and reference.
 - For any dimension (Accuracy, Completeness, Relevance, Clarity) where the score is less than 3,
   provide clear, concise feedback (2–4 sentences) explaining what could be improved.
+- If a dimension has no issues, do not include it in your response.
 
-Output ONLY valid JSON with these keys (include only keys that need feedback):
+Respond ONLY with a JSON object where keys are the dimension names (lowercase)
+and values are the feedback strings.
+
+Example output:
 {
-  "accuracy": "feedback text...",
-  "completeness": "feedback text...",
-  "relevance": "feedback text...",
-  "clarity": "feedback text..."
+  "accuracy": "The prediction misrepresents the function’s return value.",
+  "clarity": "The explanation lacks structure and is hard to follow."
 }
 
-Before giving feedback, briefly infer (internally) what the student judge likely believed and what misconceptions the student judge might have, based on the question, TA prediction, and the student judge’s evaluation. Then write feedback that directly addresses those likely misunderstandings and guides the student judge toward a better evaluation aligned with the student’s intent and mental model.
+Rubric:
 
+### Accuracy
+- 1: Completely incorrect or irrelevant.
+- 2: Partially correct but with major mistakes or omissions.
+- 3: Fully correct and matches the reference.
+
+### Completeness
+- 1: Omits most key information.
+- 2: Covers some but misses important parts.
+- 3: Fully covers all essential information.
+
+### Relevance
+- 1: Irrelevant or mostly unrelated.
+- 2: Partially related but misses main point.
+- 3: Fully focused and directly addresses the question.
+
+### Clarity
+- 1: Confusing, vague, or incoherent.
+- 2: Understandable but awkwardly phrased or unclear.
+- 3: Clear, concise, and easy to understand.
 """.strip()
 
 
