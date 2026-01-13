@@ -184,7 +184,7 @@ Prediction:
 # Teacher intervention prompt (from notebook pattern)
 # -----------------------------
 TEACHER_SYSTEM_PROMPT = """
-You are a 70B teacher LLM model reviewing a student LLM-as-judge's evaluation of a Teaching Assistant's (TA) answer.
+You are a 30B teacher LLM model reviewing a student LLM-as-judge's evaluation of a Teaching Assistant's (TA) answer.
 
 You will receive:
 - Python code snippet
