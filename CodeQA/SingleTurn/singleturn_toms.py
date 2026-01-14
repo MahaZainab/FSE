@@ -139,7 +139,7 @@ Prediction:
 
 
 # -----------------------------
-# Teacher prompt: SINGLE intervention using Theory of Mind (NOT chain-of-thought)
+# Teacher prompt: SINGLE intervention using Theory of Mind 
 # -----------------------------
 TEACHER_TOM_SYSTEM_PROMPT = f"""
 You are a 30B teacher LLM supervising a student LLM-as-judge.
@@ -158,8 +158,6 @@ Your job is a SINGLE intervention (one response) that uses THEORY OF MIND:
 3) Infer the student's likely mental model from the mismatch patterns (e.g., what it over-weighted, overlooked, assumed).
 4) Provide targeted guidance that updates the student's evaluation strategy.
 
-Important:
-- This is NOT chain-of-thought. Do NOT describe hidden step-by-step reasoning.
 - Keep guidance concrete and evidence-based (point to specific missing/wrong aspects in the TA prediction vs reference/code).
 
 Return ONLY valid JSON in EXACTLY this format:
