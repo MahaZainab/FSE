@@ -17,10 +17,10 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 import os
 
 # Configuration
-MODEL_NAME = "meta-llama/Meta-Llama-3.1-8B-Instruct"  # or "meta-llama/Llama-2-7b-chat-hf"
-INPUT_FILE = "Llama3_CodeQA_predictions.json"
-OUTPUT_JSON = "Llama3_CodeQA_llm_as_judge.json"
-OUTPUT_CSV = "Llama3_CodeQA_llm_as_judge.csv"
+MODEL_NAME = "Qwen/Qwen2.5-Coder-7B-Instruct"  # or "meta-llama/Llama-2-7b-chat-hf"
+INPUT_FILE = "test.json"
+OUTPUT_JSON = "CodeQA_test.json"
+OUTPUT_CSV = "CodeQA_test.csv"
 OUTPUT_PLOT = "evaluation_scores.png"
 SAVE_EVERY = 25
 MAX_WORKERS = 4
