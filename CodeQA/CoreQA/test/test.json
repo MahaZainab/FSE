@@ -1,0 +1,68 @@
+[
+    {
+        "code": "def get all scene exceptions indexer id exceptions Dict {}for cur exception in [x[u'doc'] for x in sickrage sr Core cache DB db get many u'scene exceptions' indexer id with doc True ] if not cur exception[u'season'] in exceptions Dict exceptions Dict[cur exception[u'season']] []exceptions Dict[cur exception[u'season']] append cur exception[u'show name'] return exceptions Dict",
+        "question": "What does the code get ?",
+        "answer": "all scene exceptions for a show i d",
+        "prediction": "A list of show names."
+    },
+    {
+        "code": "def patch stopall for patch in reversed patch active patches patch stop",
+        "question": "What does the code stop ?",
+        "answer": "all active patches",
+        "prediction": "Patches are stopped."
+    },
+    {
+        "code": "def wait write fileno timeout None timeout exc NONE event NONE io get hub loop io fileno 2 return wait io timeout timeout exc",
+        "question": "What does the code block until * fileno * is ready to write ?",
+        "answer": "the current greenlet",
+        "prediction": "Ready to write."
+    },
+    {
+        "code": "def wait write fileno timeout None timeout exc NONE event NONE io get hub loop io fileno 2 return wait io timeout timeout exc",
+        "question": "Till when is fileno ready to write ?",
+        "answer": "until *",
+        "prediction": "  Until writable."
+    },
+    {
+        "code": "def wait write fileno timeout None timeout exc NONE event NONE io get hub loop io fileno 2 return wait io timeout timeout exc",
+        "question": "Till when does the code block the current greenlet ?",
+        "answer": "until * fileno * is ready to write",
+        "prediction": "Till when is fileno ready to write?"
+    },
+    {
+        "code": "def error msg network option expected msg ' Invalidnetworksetting-- Setting {0 } Expected [{ 1 }]'return msg format option ' ' join expected",
+        "question": "What does the code build ?",
+        "answer": "an appropriate error message from a given option and a list of expected values",
+        "prediction": "Error message"
+    },
+    {
+        "code": "def write To File data file Name global memory fileslog debug \" Openingmemoryfile`%s'forwriting \" % file Name memory files[file Name] String IO String IO data",
+        "question": "How did the file specify ?",
+        "answer": "by filename",
+        "prediction": "The answer is \"written to the specified file\"."
+    },
+    {
+        "code": "def write To File data file Name global memory fileslog debug \" Openingmemoryfile`%s'forwriting \" % file Name memory files[file Name] String IO String IO data",
+        "question": "What does the code write to the file specified by filename ?",
+        "answer": "the given data",
+        "prediction": "Text"
+    },
+    {
+        "code": "def pants setup py name description additional classifiers None **kwargs if not name startswith u'pantsbuild pants' raise Value Error u\" Pantsdistributionpackagenamesmuststartwith'pantsbuild pants' given{}\" format name standard classifiers [u' Intended Audience Developers' u' License OSI Approved Apache Software License' u' Operating System Mac OS Mac OSX' u' Operating System POSIX Linux' u' Programming Language Python' u' Topic Software Development Build Tools']classifiers Ordered Set standard classifiers + additional classifiers or [] notes Pants Releases global instance notes for version PANTS SEMVER return Python Artifact name name version VERSION description description long description read contents u'src/python/pants/ABOUT rst' + notes url u'https //github com/pantsbuild/pants' license u' Apache License Version 2 0' zip safe True classifiers list classifiers **kwargs",
+        "question": "What does the code create ?",
+        "answer": "the setup_py for a pants artifact",
+        "prediction": "\nCreates Pants artifact with updated license file for current year."
+    },
+    {
+        "code": "@step ' Idonotseethechanges' @step ' Iseethesetdates' def i see the set dates step verify date or time COURSE START DATE CSS '12 / 20 / 2013 ' verify date or time COURSE END DATE CSS '12 / 26 / 2013 ' verify date or time ENROLLMENT START DATE CSS '12 / 01 / 2013 ' verify date or time ENROLLMENT END DATE CSS '12 / 10 / 2013 ' verify date or time COURSE START TIME CSS DUMMY TIME verify date or time COURSE END TIME CSS DEFAULT TIME verify date or time ENROLLMENT START TIME CSS DEFAULT TIME verify date or time ENROLLMENT END TIME CSS DUMMY TIME",
+        "question": "What do each field have ?",
+        "answer": "the value set in test_and_i_set_course_dates",
+        "prediction": "Fields: course start, end, enrollment start and end dates."
+    },
+    {
+        "code": "@step ' Idonotseethechanges' @step ' Iseethesetdates' def i see the set dates step verify date or time COURSE START DATE CSS '12 / 20 / 2013 ' verify date or time COURSE END DATE CSS '12 / 26 / 2013 ' verify date or time ENROLLMENT START DATE CSS '12 / 01 / 2013 ' verify date or time ENROLLMENT END DATE CSS '12 / 10 / 2013 ' verify date or time COURSE START TIME CSS DUMMY TIME verify date or time COURSE END TIME CSS DEFAULT TIME verify date or time ENROLLMENT START TIME CSS DEFAULT TIME verify date or time ENROLLMENT END TIME CSS DUMMY TIME",
+        "question": "What has the code ensure ?",
+        "answer": "that each field has the value set in test_and_i_set_course_dates",
+        "prediction": "The code ensures that the following fields have the values set in test_and_i_set_course_dates: COURSE START DATE, COURSE END DATE, ENROLLMENT START DATE, ENROLLMENT END DATE, COURSE START TIME, COURSE END TIME, and ENROLLMENT START TIME."
+    }
+]
