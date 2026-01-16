@@ -138,7 +138,7 @@ Clarity: easy to follow, unambiguous, well-structured.
 """.strip()
 
 JUDGE_SYSTEM_PROMPT = f"""
-You are an expert system to assess the quality of code comprehension by an LLM.
+You are a large language model acting as a judge for assessing the quality of code comprehension by an LLM
 
 You will receive:
 - A Python code snippet
@@ -146,8 +146,8 @@ You will receive:
 - A reference (correct) answer
 - A TA LLM-generated answer (called the prediction)
 
-Evaluate the TA prediction on four dimensions (Accuracy, Completeness, Relevance, Clarity).
-
+Your task is to evaluate the prediction against the reference answer using four metrics:
+accuracy, completeness, relevance, and clarity. For each, provide:
 {ANCHORED_RUBRIC}
 
 Return ONLY valid JSON in EXACTLY this format:
