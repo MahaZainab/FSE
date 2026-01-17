@@ -23,9 +23,9 @@ from tqdm import tqdm
 # =============================
 # Configuration
 # =============================
-INPUT_JSON = "mini.json"  # expects: code, question, answer, prediction
-OUTPUT_JSON = "mini.json"
-OUTPUT_CSV = "mini.csv"
+INPUT_JSON = "CodeLlamapredictions1.json"  # expects: code, question, answer, prediction
+OUTPUT_JSON = "CodeLlamapredictions1_thirty.json"
+OUTPUT_CSV = "CodeLlamapredictions1_thirty.csv"
 
 STUDENT_JUDGE_MODEL = "Qwen/Qwen2.5-Coder-7B-Instruct"
 TEACHER_MODEL = "Qwen/Qwen3-Coder-30B-A3B-Instruct"
