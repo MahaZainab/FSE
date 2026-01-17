@@ -23,7 +23,7 @@ from tqdm import tqdm
 # =============================
 # Configuration
 # =============================
-INPUT_JSON = "CodeLlamapredictions1.json"  # expects: code, question, answer, prediction
+INPUT_JSON = "CodeLlamapredictions2.json"  # expects: code, question, answer, prediction
 OUTPUT_JSON = "CodeLlamapredictions2_thirty.json"
 OUTPUT_CSV = "CodeLlamapredictions2_thirty.csv"
 
