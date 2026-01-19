@@ -35,8 +35,7 @@ RANDOM_SEED = 42
 
 
 # Save partial outputs every N processed examples
-# (Save every 25 examples to match your cluster run preference)
-CHECKPOINT_EVERY = 25
+CHECKPOINT_EVERY = 5
 # HuggingFace cache directory
 HF_CACHE_DIR = os.getenv("HF_HOME", "/aiau010_scratch/maz0032/.cache/huggingface")
 
@@ -496,88 +495,88 @@ def main() -> None:
     # Process each example
     try:
         for idx, ex in enumerate(tqdm(data, desc="Processing examples")):
-            code = ex.get("code", "")
-            question = ex.get("question", "")
-            reference = ex.get("answer", "")
-            prediction = ex.get("prediction", "")
+        code = ex.get("code", "")
+        question = ex.get("question", "")
+        reference = ex.get("answer", "")
+        prediction = ex.get("prediction", "")
 
-            # Step 1: Student initial scoring
-            raw_student = student.invoke([
-                {"role": "system", "content": JUDGE_SYSTEM_PROMPT},
-                {"role": "user", "content": build_judge_user_prompt(code, question, reference, prediction)},
+        # Step 1: Student initial scoring
+        raw_student = student.invoke([
+            {"role": "system", "content": JUDGE_SYSTEM_PROMPT},
+            {"role": "user", "content": build_judge_user_prompt(code, question, reference, prediction)},
+        ])
+        student_scores = parse_score_json(raw_student)
+
+        teacher_intervened = idx in intervene_ids
+        raw_teacher = None
+        teacher_out = None
+        raw_rescore = None
+        rescored_scores = None
+
+        # Step 2: Teacher intervention (if selected)
+        if teacher_intervened and student_scores is not None:
+            raw_teacher = teacher.invoke([
+                {"role": "system", "content": TEACHER_TOM_SYSTEM_PROMPT},
+                {"role": "user", "content": build_teacher_user_prompt(
+                    code, question, reference, prediction, student_scores
+                )},
             ])
-            student_scores = parse_score_json(raw_student)
+            teacher_out = parse_teacher_json(raw_teacher)
 
-            teacher_intervened = idx in intervene_ids
-            raw_teacher = None
-            teacher_out = None
-            raw_rescore = None
-            rescored_scores = None
-
-            # Step 2: Teacher intervention (if selected)
-            if teacher_intervened and student_scores is not None:
-                raw_teacher = teacher.invoke([
-                    {"role": "system", "content": TEACHER_TOM_SYSTEM_PROMPT},
-                    {"role": "user", "content": build_teacher_user_prompt(
-                        code, question, reference, prediction, student_scores
+            # Step 3: Student rescores based on teacher guidance
+            if teacher_out is not None:
+                raw_rescore = student.invoke([
+                    {"role": "system", "content": RESCORE_SYSTEM_PROMPT},
+                    {"role": "user", "content": build_rescore_user_prompt(
+                        code, question, reference, prediction, student_scores, teacher_out
                     )},
                 ])
-                teacher_out = parse_teacher_json(raw_teacher)
+                rescored_scores = parse_score_json(raw_rescore)
 
-                # Step 3: Student rescores based on teacher guidance
-                if teacher_out is not None:
-                    raw_rescore = student.invoke([
-                        {"role": "system", "content": RESCORE_SYSTEM_PROMPT},
-                        {"role": "user", "content": build_rescore_user_prompt(
-                            code, question, reference, prediction, student_scores, teacher_out
-                        )},
-                    ])
-                    rescored_scores = parse_score_json(raw_rescore)
+        # Determine final scores
+        final_scores = rescored_scores if rescored_scores is not None else (student_scores or {})
 
-            # Determine final scores
-            final_scores = rescored_scores if rescored_scores is not None else (student_scores or {})
+        # Build record
+        record = {
+            "id": ex.get("id", idx),
+            "code": code,
+            "question": question,
+            "answer": reference,
+            "prediction": prediction,
 
-            # Build record
-            record = {
-                "id": ex.get("id", idx),
-                "code": code,
-                "question": question,
-                "answer": reference,
-                "prediction": prediction,
+            "raw_student_judge_output": raw_student,
+            "initial_student_scores": student_scores,
 
-                "raw_student_judge_output": raw_student,
-                "initial_student_scores": student_scores,
+            "teacher_intervened": teacher_intervened,
+            "raw_teacher_output": raw_teacher,
+            "teacher_tom_json": teacher_out,
 
-                "teacher_intervened": teacher_intervened,
-                "raw_teacher_output": raw_teacher,
-                "teacher_tom_json": teacher_out,
+            "raw_student_rescore_output": raw_rescore,
+            "rescored_student_scores": rescored_scores,
 
-                "raw_student_rescore_output": raw_rescore,
-                "rescored_student_scores": rescored_scores,
+            # Final scores (flattened)
+            "accuracy": final_scores.get("accuracy"),
+            "completeness": final_scores.get("completeness"),
+            "relevance": final_scores.get("relevance"),
+            "clarity": final_scores.get("clarity"),
 
-                # Final scores (flattened)
-                "accuracy": final_scores.get("accuracy"),
-                "completeness": final_scores.get("completeness"),
-                "relevance": final_scores.get("relevance"),
-                "clarity": final_scores.get("clarity"),
+            # Initial scores
+            "accuracy_initial": student_scores.get("accuracy") if student_scores else None,
+            "completeness_initial": student_scores.get("completeness") if student_scores else None,
+            "relevance_initial": student_scores.get("relevance") if student_scores else None,
+            "clarity_initial": student_scores.get("clarity") if student_scores else None,
 
-                # Initial scores
-                "accuracy_initial": student_scores.get("accuracy") if student_scores else None,
-                "completeness_initial": student_scores.get("completeness") if student_scores else None,
-                "relevance_initial": student_scores.get("relevance") if student_scores else None,
-                "clarity_initial": student_scores.get("clarity") if student_scores else None,
+            # Rescored scores
+            "accuracy_rescored": rescored_scores.get("accuracy") if rescored_scores else None,
+            "completeness_rescored": rescored_scores.get("completeness") if rescored_scores else None,
+            "relevance_rescored": rescored_scores.get("relevance") if rescored_scores else None,
+            "clarity_rescored": rescored_scores.get("clarity") if rescored_scores else None,
+        }
+        records.append(record)
 
-                # Rescored scores
-                "accuracy_rescored": rescored_scores.get("accuracy") if rescored_scores else None,
-                "completeness_rescored": rescored_scores.get("completeness") if rescored_scores else None,
-                "relevance_rescored": rescored_scores.get("relevance") if rescored_scores else None,
-                "clarity_rescored": rescored_scores.get("clarity") if rescored_scores else None,
-            }
-            records.append(record)
-
-            # Checkpoint save every N examples
-            if CHECKPOINT_EVERY and ((idx + 1) % CHECKPOINT_EVERY == 0):
-                save_checkpoint(records, idx + 1)
+        # Checkpoint save every N examples
+        if CHECKPOINT_EVERY and ((idx + 1) % CHECKPOINT_EVERY == 0):
+            save_checkpoint(records, idx + 1)
 
     except KeyboardInterrupt:
         print("\n[Interrupted] Ctrl+C detected. Saving partial results...")
@@ -602,7 +601,7 @@ def main() -> None:
     print(f"Final outputs saved:")
     print(f"  - {OUTPUT_JSON}")
     print(f"  - {OUTPUT_CSV}")
-    # Print summary
+# Print summary
     print("\n" + "=" * 60)
     print("Summary")
     print("=" * 60)
